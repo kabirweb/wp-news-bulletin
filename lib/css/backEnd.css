@@ -1,0 +1,137 @@
+@charset "utf-8";
+.wpnb_clear {
+	clear:both;
+}
+#wpnb_container {
+	width:98%;
+	height:auto;
+}
+#wpnb_body {
+	width:68%;
+	height:auto;
+	float:left;
+}
+#wpnb_body .postBlick {
+	margin-top:25px;
+	border:1px solid #ddd;
+	border-radius:3px;
+	padding:15px;
+	background:#fbfbfb;
+}
+#wpnb_body .postBlick input[type=text] {
+	width:79%;
+	height:26px;
+	margin-bottom:10px;
+	font-size:16px;
+}
+#wpnb_body .wpnb_cat {
+	float:right;
+	width:20%;
+	height:26px;
+	line-height:26px;
+}
+#wpnb_body input[type=submit] {
+	float:right;
+	margin-top:20px;
+	font-size:16px;
+	font-weight:bold;
+	width:140px;
+	line-height:30px;
+}
+#wpnb_body .btnZR {
+	float:left;
+	margin-top:20px;
+	font-size:16px;
+	font-weight:bold;
+	width:200px;
+	line-height:30px;
+}
+#wpnb_sidebar .wpnb_cr {
+	margin-bottom:20px;
+	float:left !important;
+	width:100% !important;
+}
+#wpnb_sidebar .wpnb_cr .hndle {
+	cursor:default !important;
+	padding:10px;
+}
+#wpnb_sidebar .wpnb_cr .inside {
+}
+#wpnb_body .editor {
+	margin-bottom:20px;
+	float:left !important;
+	width:100% !important;
+}
+#wpnb_body .editor .hndle {
+	cursor:default !important;
+	padding:10px;
+}
+#wpnb_body .editor #wpwmeditor_ifr {
+	background:#fff;
+}
+#wpnb_body .settings {
+	margin-bottom:20px;
+	float:left !important;
+	width:100% !important;
+}
+#wpnb_body .settings .hndle {
+	cursor:default !important;
+	padding:10px;
+}
+#wpnb_body #off {
+	position:absolute;
+	background:#eee;
+	top:0px;
+	bottom:0px;
+	left:0px;
+	right:0px;
+	z-index:100;
+	opacity:0.6;
+	filter:alpha(opacity=60);
+}
+.tablenav {
+	float:left;
+}
+.widefat .check-column {
+	padding:7px !important;
+}
+.settings .row {
+	margin-bottom:7px;
+	padding-bottom:7px;
+	border-bottom:1px solid #ddd;
+}
+.settings .row label {
+	width:200px;
+	display:inline-block;
+}
+.settings .row select {
+	width:220px;
+}
+#wpnb_sidebar {
+	float:right;
+	width:28%;
+	margin-right:2%;
+	margin-top:20px;
+}
+.wpnb_settings {
+	float:left;
+	width:68%;
+}
+.wpnb_settings_select {
+	margin-bottom:5px;
+	width:200px;
+	margin-top:5px;
+}
+@media (max-width: 960px)
+{
+#wpnb_sidebar {
+	float:right;
+	width:35% !important;
+	margin-right:2%;
+	margin-top:20px;
+}
+.wpnb_settings {
+	float:left;
+	width:61% !important;
+}
+}
