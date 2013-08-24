@@ -3,6 +3,7 @@ $addOptions = array(
 'wpnb_boxAmount' => 3, 
 'wpnb_boxLetters' => 100, 
 'wpnb_boxImg' => 'on', 
+'wpnb_date' => 'on',
 'wpnb_displayCr' => 'on',
 'wpnb_devlink' => '<a href="http://www.ahsanulkabir.com/" title="Ahsanul Kabir" class="plugCr">Ahsanul Kabir</a>', 
 'wpnb_hirelink' => '<iframe width="100%" height="215px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://webdeveloperszone.com/ifarme/wppm_advert1.php"></iframe><a href="http://www.ahsanulkabir.com/?ref='.$_SERVER['SERVER_NAME'].'&rel=wp-news-bulletin" target="_blank" title="Ahsanul Kabir" style="float:right; height:26px; line-height:26px;">View Developer\'s Profile</a>', 

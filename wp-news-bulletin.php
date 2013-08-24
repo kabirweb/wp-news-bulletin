@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: WP News Bulletin
-Plugin URI: http://webdeveloperszone.com/wordpress/plugins/wp-news-bulletin
+Plugin URI: http://www.dlozy.com/articles/technology/webware/wp-news-bulletin/
 Description: <strong>WP News Bulletin</strong>, this wordpress plugin help your to publish your company or blog's news & updates. It also have a user friendly front end UI which appears with a nice auto news slider. Your website's visitors can read the full news through a popup box.
-Version: 0.0.2
+Version: 0.0.3
 Author: Ahsanul Kabir
 Author URI: http://ahsanulkabir.com/
 License: GPL2
@@ -118,7 +118,8 @@ function wpnb_popupTemp()
         <img src="<?php echo plugins_url('lib/img/close.png', __FILE__); ?>" id="wpnb_popClose" />
         <div id="wpncLoader">
        <?php 
-        $argswprlist = array
+        wp_reset_query();
+		$argswprlist = array
 		(
 			'post_type' => array('wpnbNews'), 
 			'posts_per_page' => -1
@@ -129,7 +130,15 @@ function wpnb_popupTemp()
 		the_ID();
 		echo '" class="wpnb"><h1>';
 		the_title();
-		echo '</h1><div class="pop">';
+		echo '</h1><div class="clrFixia"></div>';
+		if(get_option('wpnb_date')=='on')
+		{
+			echo '<div class="wpnb_date">';
+			echo get_the_date();
+			the_date();
+			echo '</div>';
+		}
+		echo '<div class="pop">';
 		the_post_thumbnail('medium');
 		remove_all_filters('the_content');
 		the_content();
@@ -296,6 +305,7 @@ class wpnb_NewsBulletinWidget extends WP_Widget
 		{
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
+		wp_reset_query();
 		$argswprlist = array
 		(
 			'post_type' => array('wpnbNews'), 
@@ -320,6 +330,12 @@ class wpnb_NewsBulletinWidget extends WP_Widget
 			case 500:
 			echo wpnb_trunCate(get_the_content(), 500, '...', false, true);
 			break;
+		}
+		if(get_option('wpnb_date')=='on')
+		{
+			echo '<div class="clrFixia"></div><div class="wpnb_date">';
+			the_date();
+			echo '</div>';
 		}
 		echo '<div class="clrFixia"></div></li>';
 		endwhile;
@@ -367,11 +383,12 @@ add_action( 'admin_menu', 'wpnb_adminMenu' );
 function wpnb_Settings()
 {
 	$newsSuccessMsg = false;
-	if( isset($_POST["wpnb_boxAmount"]) && isset($_POST["wpnb_boxLetters"]) && isset($_POST["wpnb_boxImg"]) )
+	if( isset($_POST["wpnb_boxAmount"]) && isset($_POST["wpnb_boxLetters"]) && isset($_POST["wpnb_boxImg"]) && isset($_POST["wpnb_date"]) ) 
 	{
 		update_option( 'wpnb_boxAmount', $_POST["wpnb_boxAmount"] );
 		update_option( 'wpnb_boxLetters', $_POST["wpnb_boxLetters"] );
 		update_option( 'wpnb_boxImg', $_POST["wpnb_boxImg"] );
+		update_option( 'wpnb_date', $_POST["wpnb_date"] );
 		$newsSuccessMsg = true;
 	}
 	?>
@@ -384,7 +401,7 @@ function wpnb_Settings()
                 <?php
                 if( $newsSuccessMsg )
 				{
-					echo '<div class="updated below-h2" id="message"><p>Post published. <a href="http://localhost/wp/3.5.2/?wpnbnews=asdasd">View post</a></p></div>';
+					echo '<div class="updated below-h2" id="message"><p>Successfully saved. <a href="'.site_url().'" target="_blank">View site</a></p></div>';
 				}
 				?>
                 
@@ -415,6 +432,14 @@ function wpnb_Settings()
                         <select name="wpnb_boxImg" class="wpnb_settings_select">
                         	<option value="on"<?php if(get_option('wpnb_boxImg')=='on'){echo ' selected="selected"';} ?>>Display Image</option>
                             <option value="off"<?php if(get_option('wpnb_boxImg')=='off'){echo ' selected="selected"';} ?>>Hide Image</option>
+                        </select>
+                    </div>
+                    <br />
+                    <div>
+                    	<label>Display Date?</label><br />
+                        <select name="wpnb_date" class="wpnb_settings_select">
+                        	<option value="on"<?php if(get_option('wpnb_date')=='on'){echo ' selected="selected"';} ?>>Display Date</option>
+                            <option value="off"<?php if(get_option('wpnb_date')=='off'){echo ' selected="selected"';} ?>>Hide Date</option>
                         </select>
                     </div>
                     <br />

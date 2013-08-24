@@ -1,10 +1,10 @@
 ﻿=== WP News Bulletin ===
 Contributors: kabirweb
 Donate link: http://www.webdeveloperszone.com/crd/donate.php
-Tags: news stroller, news & updates, company news, news bulletin, news slider
+Tags: news & updates, company news, news bulletin, news slider, news scroller, vertical news scroller.
 Requires at least: 3.3
 Tested up to: 3.6
-Stable tag: 0.0.2
+Stable tag: 0.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,7 +30,8 @@ No.
 6. Full news view
 
 == Changelog ==
-1. Fix few issue.
+1. Fix CSS issue.
+2. Add date option.
 
 == Upgrade notice ==
 No upgrade yet

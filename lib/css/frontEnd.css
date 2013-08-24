@@ -7,6 +7,7 @@
 	left:50%;
 	top:10%;
 	display:none;
+	z-index:999999;
 }
 #wpnb_popBox {
 	position:absolute;
@@ -43,6 +44,7 @@
 	opacity:0.4;
 	filter:alpha(opacity=40);
 	cursor:pointer;
+	z-index:999999;
 }
 #wpnb_popClose:hover {
 	opacity:01;
@@ -74,9 +76,29 @@
 .clrFixia {
 	clear:both;
 }
-
-.wpnb{display:none;}
-.wpnb h1{font-size:24px; font-weight:normal; padding:5px 5px 10px 5px; border-bottom:1px solid #eee; margin-bottom:20px;}
-.wpnb img{float:left; margin:10px 15px 10px 0px;}
-.wpnb p{line-height:22px;}
-.wpnb .pop{height:345px; overflow:auto; padding:10px;}
+.wpnb {
+	display:none;
+}
+.wpnb h1 {
+	font-size:24px;
+	font-weight:normal;
+	padding:5px 5px 10px 5px;
+	border-bottom:1px solid #eee;
+	margin-bottom:10px;
+}
+.wpnb img {
+	float:left;
+	margin:10px 15px 10px 0px;
+}
+.wpnb p {
+	line-height:22px;
+}
+.wpnb .pop {
+	height:345px;
+	overflow:auto;
+	padding:10px;
+}
+.wpnb_date {
+	text-align:right;
+	font-style:italic;
+}
