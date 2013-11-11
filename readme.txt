@@ -1,10 +1,10 @@
 ﻿=== WP News Bulletin ===
-Contributors: kabirweb
-Donate link: http://www.webdeveloperszone.com/crd/donate.php
+Contributors: kabirweb, tsmumu, a1netsolutions
+Donate link: http://www.a1netsolutions.com/3rdp/donate.php
 Tags: news & updates, company news, news bulletin, news slider, news scroller, vertical news scroller.
 Requires at least: 3.3
-Tested up to: 3.6
-Stable tag: 0.0.3
+Tested up to: 3.7.1
+Stable tag: 0.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,7 +31,7 @@ No.
 
 == Changelog ==
 1. Fix CSS issue.
-2. Add date option.
+2. Add color option and shortcode.
 
 == Upgrade notice ==
 No upgrade yet
