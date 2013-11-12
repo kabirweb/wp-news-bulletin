@@ -3,7 +3,7 @@
 Plugin Name: WP News Bulletin
 Plugin URI: http://www.a1netsolutions.com/Products/WP-News-Bulletin
 Description: <strong>WP News Bulletin</strong>, this wordpress plugin help your to publish your company or blog's news & updates. It also have a user friendly front end UI which appears with a nice auto news slider. Your website's visitors can read the full news through a popup box.
-Version: 0.0.4
+Version: 0.0.5
 Author: Ahsanul Kabir
 Author URI: http://www.ahsanulkabir.com/
 License: GPL2
