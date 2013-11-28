@@ -3,14 +3,14 @@
 Plugin Name: WP News Bulletin
 Plugin URI: http://www.a1netsolutions.com/Products/WP-News-Bulletin
 Description: <strong>WP News Bulletin</strong>, this wordpress plugin help your to publish your company or blog's news & updates. It also have a user friendly front end UI which appears with a nice auto news slider. Your website's visitors can read the full news through a popup box.
-Version: 0.0.5
+Version: 0.1.1
 Author: Ahsanul Kabir
 Author URI: http://www.ahsanulkabir.com/
 License: GPL2
 License URI: license.txt
 */
 
-function wpnbnews_register()
+function wpnb_news_register()
 {
 	$labels = array(
 		'name' => 'News',
@@ -38,49 +38,54 @@ function wpnbnews_register()
 		'menu_position' => null,
 		'supports' => array('title','editor','thumbnail')
 	  ); 
-	register_post_type( 'wpnbnews' , $args );
+	register_post_type( 'wpnb_news' , $args );
 }
-add_action('init', 'wpnbnews_register');
+add_action( 'init', 'wpnb_news_register' );
 
-function wpnb_scriptsMethod()
+function wpnb_frontEndJS()
 {
-	wp_enqueue_script('jquery');
-	wp_register_script('wpnbJs', ( plugins_url('lib/js/wp-news-bulletin.js', __FILE__) ) );
-	wp_enqueue_script('wpnbJs');
+	wp_enqueue_script( 'wpnb-frontEndJS', (plugins_url('lib/js/wpnb_frontEnd.js', __FILE__)), array('jquery') );
 }
-add_action('wp_enqueue_scripts', 'wpnb_scriptsMethod');
+add_action('wp_enqueue_scripts', 'wpnb_frontEndJS');
 
-function wpnb_stylesMethod()
+function wpnb_colorPicker($hook_suffix)
 {
-	wp_register_style( 'wpnbCssB', ( plugins_url('lib/css/backEnd.css', __FILE__) ) );
-	wp_enqueue_style( 'wpnbCssB' );
+    wp_enqueue_style( 'wp-color-picker' );
+    wp_enqueue_script( 'wpnb-color-handle', plugins_url('lib/js/wpnb_colorScript.js', __FILE__ ), array('wp-color-picker'), false, true );
 }
-add_action( 'admin_init', 'wpnb_stylesMethod' );
+add_action( 'admin_enqueue_scripts', 'wpnb_colorPicker' );
 
-function wpnb_stylesMethodFront()
+function wpnb_backEndCss()
 {
-	wp_register_style( 'wpnbCssF', ( plugins_url('lib/css/frontEnd.css', __FILE__) ) );
-	wp_enqueue_style( 'wpnbCssF' );
+	wp_enqueue_style( 'wpnb-cssB', ( plugins_url('lib/css/wpnb_backEnd.css', __FILE__) ) );
 }
-add_action( 'wp_enqueue_scripts', 'wpnb_stylesMethodFront' );
+add_action( 'admin_init', 'wpnb_backEndCss' );
 
-function wpnb_useData()
+function wpnb_frontEndCss()
 {
-	$dataPath = '../wp-content/plugins/wp-news-bulletin/lib/data.php';
-	if(is_file($dataPath))
+	wp_enqueue_style( 'wpnb-cssF', ( plugins_url('lib/css/wpnb_frontEnd.css', __FILE__) ) );
+}
+add_action( 'wp_enqueue_scripts', 'wpnb_frontEndCss' );
+
+define(WPNB_LIB, "../wp-content/plugins/wp-news-bulletin/lib/");
+
+function wpnb_defaults()
+{
+	$wpnb_defaults = WPNB_LIB.'wpnb_defaults.php';
+	if(is_file($wpnb_defaults))
 	{
-		require $dataPath;
+		require $wpnb_defaults;
 		foreach($addOptions as $addOptionK => $addOptionV)
 		{
 			update_option($addOptionK, $addOptionV);
 		}
-		unlink($dataPath);
+		unlink($wpnb_defaults);
 	}
 }
 
 function wpnb_activate()
 {
-	wpnb_useData();
+	wpnb_defaults();
 }
 register_activation_hook( __FILE__, 'wpnb_activate' );
 
@@ -89,112 +94,111 @@ function wpnb_getCr($k, $v)
 	echo '<div class="postbox wpnb_cr"><h3 class="hndle"><span>'.$k.'</span></h3><div class="inside">'.get_option($v).'</div></div>';
 }
 
-if(isset($_POST["cr"]))
-{
-	update_option( 'wpnb_displayCr', $_POST["cr"] );
-}
-
 function wpnb_printCr()
 {
-	wpnb_getCr('Plugins &amp; Themes', 'wpnb_hirelink');
-	wpnb_getCr('WordPress Development', 'wpnb_comlink2');
-	wpnb_getCr('Support Us', 'wpnb_supportlink');
+	wpnb_getCr('Plugins &amp; Themes', 'wpnb_other');
+	wpnb_getCr('WordPress Development', 'wpnb_hire');
+	wpnb_getCr('Support Us', 'wpnb_support');
 }
 
 function wpnb_popupTemp()
 {
-	if((get_option('wpnb_displayCr')) != 'off'){echo get_option('wpnb_devlink').get_option('wpnb_comlink');}
-	$wpnb_witgetBG = get_option('wpnb_witgetBG');
-	$wpnb_titleColor = get_option('wpnb_titleColor');
-	$wpnb_textColor = get_option('wpnb_textColor');
-	echo '<style type="text/css">';
-	if(!empty($wpnb_witgetBG)){echo 'aside.widget_wpnb_widget {background:'.$wpnb_witgetBG.' !important;}';}
-	if(!empty($wpnb_titleColor)){echo 'aside.widget_wpnb_widget > h3.widget-title {color:'.$wpnb_titleColor.' !important;}';}
-	if(!empty($wpnb_textColor)){echo 'aside.widget_wpnb_widget > div.wpnbnews {color:'.$wpnb_textColor.' !important;}';}
-	echo '</style>';
-	?>
-	<div id="wpnb_popBoxOut">
-		<div id="wpnb_popBox">
-        <img src="<?php echo plugins_url('lib/img/close.png', __FILE__); ?>" id="wpnb_popClose" />
-        <div id="wpncLoader">
-       <?php 
-        wp_reset_query();
-		$argswprlist = array
-		(
-			'post_type' => array('wpnbnews'), 
-			'posts_per_page' => -1
-		);
-		$querywprlist = query_posts( $argswprlist );
-		if (have_posts()) : while (have_posts()) : the_post();
-		echo '<div id="wpnbpopBoxMin';
-		the_ID();
-		echo '" class="wpnb"><h1>';
-		the_title();
-		echo '</h1><div class="clrFixia"></div>';
-		if(get_option('wpnb_date')=='on')
+	if( get_option('wpnb_defaults') == 'on' )
+	{
+		$wpnb_witgetBG = get_option('wpnb_witgetBG');
+		$wpnb_titleColor = get_option('wpnb_titleColor');
+		$wpnb_textColor = get_option('wpnb_textColor');
+		echo '<style type="text/css">';
+		if(!empty($wpnb_witgetBG)){echo 'aside.widget_wpnb_widget {background:'.$wpnb_witgetBG.' !important;}';}
+		if(!empty($wpnb_titleColor)){echo 'aside.widget_wpnb_widget > h3.widget-title {color:'.$wpnb_titleColor.' !important;}';}
+		if(!empty($wpnb_textColor)){echo 'aside.widget_wpnb_widget > div.wpnbnews {color:'.$wpnb_textColor.' !important;}';}
+		echo '</style>';
+		echo get_option('wpnb_dev');
+		echo get_option('wpnb_com');
+		?>
+		<div id="wpnb_popBoxOut">
+			<div id="wpnb_popBox">
+			<img src="<?php echo plugins_url('lib/img/close.png', __FILE__); ?>" id="wpnb_popClose" />
+			<div id="wpncLoader">
+		   <?php 
+			wp_reset_query();
+			$argswprlist = array
+			(
+				'post_type' => array('wpnb_news'), 
+				'posts_per_page' => -1
+			);
+			$querywprlist = query_posts( $argswprlist );
+			if (have_posts()) : while (have_posts()) : the_post();
+			echo '<div id="wpnbpopBoxMin';
+			the_ID();
+			echo '" class="wpnb"><h1>';
+			the_title();
+			echo '</h1><div class="clrFixia"></div>';
+			if(get_option('wpnb_date')=='on')
+			{
+				echo '<div class="wpnb_date">';
+				echo get_the_date();
+				the_date();
+				echo '</div>';
+			}
+			echo '<div class="pop">';
+			the_post_thumbnail('medium');
+			remove_all_filters('the_content');
+			the_content();
+			echo '</div></div>';
+			endwhile;
+			endif;
+			?>
+			</div>
+			</div>
+		</div>
+		<div id="wpnb_hideBody"></div>
+		<script type="text/javascript">
+		jQuery(function()
 		{
-			echo '<div class="wpnb_date">';
-			echo get_the_date();
-			the_date();
-			echo '</div>';
-		}
-		echo '<div class="pop">';
-		the_post_thumbnail('medium');
-		remove_all_filters('the_content');
-		the_content();
-		echo '</div></div>';
-		endwhile;
-		endif;
-        ?>
-        </div>
-        </div>
-    </div>
-    <div id="wpnb_hideBody"></div>
-    <script type="text/javascript">
-    jQuery(function()
-    {
-        jQuery(".wpnbnews").wpnbCarousel(
-        {
-            vertical:true, 
-            hoverPause:true, 
-            visible:<?php echo get_option('wpnb_boxAmount'); ?>, 
-            auto:3000, 
-            speed:500
-        });
-    });
-    jQuery(document).ready(function()
-    {
-        jQuery("#wpnb_popClose").click(function()
-        {
-            jQuery("#wpnb_popBoxOut").fadeOut();
-            jQuery("#wpnb_popBox").fadeOut();
-            jQuery("#wpnb_hideBody").fadeOut();
-            jQuery(".wpnb").hide();
-        });
-        jQuery("#wpnb_hideBody").click(function()
-        {
-            jQuery("#wpnb_popBoxOut").fadeOut();
-            jQuery("#wpnb_popBox").fadeOut();
-            jQuery("#wpnb_hideBody").fadeOut();
-            jQuery(".wpnb").hide();
-        });
-        jQuery(".wpnb_trg").click(function()
-        {
-            jQuery("#wpnb_popBoxOut").fadeIn();
-            jQuery("#wpnb_popBox").fadeIn();
-            jQuery("#wpnb_hideBody").fadeIn();
-        });
-    });
-    jQuery(document).ready(function()
-    {
-        jQuery('.wpnb_trg').click(function()
-        {
-            var wpnbID = jQuery(this).attr("ref");
-            jQuery("#wpnbpopBoxMin"+wpnbID).show();
-        });
-    });
-    </script>
-    <?php
+			jQuery(".wpnbnews").wpnbCarousel(
+			{
+				vertical:true, 
+				hoverPause:true, 
+				visible:<?php echo get_option('wpnb_boxAmount'); ?>, 
+				auto:3000, 
+				speed:500
+			});
+		});
+		jQuery(document).ready(function()
+		{
+			jQuery("#wpnb_popClose").click(function()
+			{
+				jQuery("#wpnb_popBoxOut").fadeOut();
+				jQuery("#wpnb_popBox").fadeOut();
+				jQuery("#wpnb_hideBody").fadeOut();
+				jQuery(".wpnb").hide();
+			});
+			jQuery("#wpnb_hideBody").click(function()
+			{
+				jQuery("#wpnb_popBoxOut").fadeOut();
+				jQuery("#wpnb_popBox").fadeOut();
+				jQuery("#wpnb_hideBody").fadeOut();
+				jQuery(".wpnb").hide();
+			});
+			jQuery(".wpnb_trg").click(function()
+			{
+				jQuery("#wpnb_popBoxOut").fadeIn();
+				jQuery("#wpnb_popBox").fadeIn();
+				jQuery("#wpnb_hideBody").fadeIn();
+			});
+		});
+		jQuery(document).ready(function()
+		{
+			jQuery('.wpnb_trg').click(function()
+			{
+				var wpnbID = jQuery(this).attr("ref");
+				jQuery("#wpnbpopBoxMin"+wpnbID).show();
+			});
+		});
+		</script>
+		<?php
+	}
 }
 add_action('wp_footer', 'wpnb_popupTemp', 100);
 
@@ -332,7 +336,7 @@ class wpnb_NewsBulletinWidget extends WP_Widget
 		wp_reset_query();
 		$argswprlist = array
 		(
-			'post_type' => array('wpnbnews'), 
+			'post_type' => array('wpnb_news'), 
 			'posts_per_page' => 10
 		);
 		$querywprlist = query_posts( $argswprlist );
@@ -396,20 +400,16 @@ function wpnb_register_widgets()
 {
 	register_widget( 'wpnb_NewsBulletinWidget' );
 }
-add_action( 'widgets_init', 'wpnb_register_widgets' );
+if( get_option('wpnb_defaults') == 'on' )
+{
+	add_action( 'widgets_init', 'wpnb_register_widgets' );
+}
 
 function wpnb_adminMenu()
 {
-	add_submenu_page( 'edit.php?post_type=wpnbnews', 'WP News Bulletin Settings', 'Settings', 'manage_options', 'settings', 'wpnb_Settings' );
+	add_submenu_page( 'edit.php?post_type=wpnb_news', 'WP News Bulletin Settings', 'Settings', 'manage_options', 'settings', 'wpnb_Settings' );
 }
 add_action( 'admin_menu', 'wpnb_adminMenu' );
-
-function wpnb_color_picker( $hook_suffix )
-{
-    wp_enqueue_style( 'wp-color-picker' );
-    wp_enqueue_script( 'wpnb-color-handle', plugins_url('lib/js/colorScript.js', __FILE__ ), array('wp-color-picker'), false, true );
-}
-add_action( 'admin_enqueue_scripts', 'wpnb_color_picker' );
 
 function wpnb_Settings()
 {
@@ -429,12 +429,16 @@ function wpnb_Settings()
     <div id="wpbody">
     	<div class="wpnb_settings">
         	<div id="wpnb_container" class="wrap">
-            	<div class="icon32 icon32-posts-wpnbnews" id="icon-edit"><br></div>
+            	<div class="icon32 icon32-posts-wpnb_news" id="icon-edit"><br></div>
                 <h2>News Settings</h2>
                 <a href="http://www.youtube.com/watch?v=HcgoUrO5loA" target="_blank">
                 <img src="<?php echo plugins_url('lib/img/uvg.png', __FILE__); ?>" style="border:0 none;float:right;height:50px;position:relative;width:auto;z-index:200;top:-40px;" />
                 </a>
                 <?php
+				if( get_option('wpnb_defaults') != 'on' )
+				{
+					echo '<div id="wpwm_errorMSG">Error! please do the following -<br />1. Deactivate and Delete this plugin.<br />2. <a href="http://downloads.wordpress.org/plugin/wp-news-bulletin.zip">Download</a> and Reinstall again.</div>';
+				}
                 if( $newsSuccessMsg )
 				{
 					echo '<div class="updated below-h2" id="message"><p>Successfully saved. <a href="'.site_url().'" target="_blank">View site</a></p></div>';
@@ -477,26 +481,21 @@ function wpnb_Settings()
                         </select>
                     </div>
 					<?php
-                    
                     $wpnb_witgetBG = get_option('wpnb_witgetBG');
                     $wpnb_titleColor = get_option('wpnb_titleColor');
                     $wpnb_textColor = get_option('wpnb_textColor');
-                    
                     if(!empty($wpnb_witgetBG))
                     {echo '<div><label>Witget background color</label><input type="text" class="wpnb_colorField" name="wpnb_witgetBG" data-default-color="'.$wpnb_witgetBG.'" value="'.$wpnb_witgetBG.'" /></div>';}
                     else
                     {echo '<div><label>Witget background color</label><input type="text" class="wpnb_colorField" name="wpnb_witgetBG" /></div>';}
-                    
                     if(!empty($wpnb_titleColor))
                     {echo '<div><label>Witget title color</label><input type="text" class="wpnb_colorField" name="wpnb_titleColor" data-default-color="'.$wpnb_titleColor.'" value="'.$wpnb_titleColor.'" /></div>';}
                     else
                     {echo '<div><label>Witget title color</label><input type="text" class="wpnb_colorField" name="wpnb_titleColor" /></div>';}
-                    
                     if(!empty($wpnb_textColor))
                     {echo '<div><label>Witget text color</label><input type="text" class="wpnb_colorField" name="wpnb_textColor" data-default-color="'.$wpnb_textColor.'" value="'.$wpnb_textColor.'" /></div>';}
                     else
                     {echo '<div><label>Witget text color</label><input type="text" class="wpnb_colorField" name="wpnb_textColor" /></div>';}
-                    
                     ?>
                 	<input type="submit" value="Save" class="button button-primary button-large" />
                 </form>
@@ -515,7 +514,7 @@ function wpnb_shortcode()
 	wp_reset_query();
 	$argswprlist = array
 	(
-		'post_type' => array('wpnbnews'), 
+		'post_type' => array('wpnb_news'), 
 		'posts_per_page' => -1
 	);
 	$querywprlist = query_posts( $argswprlist );
