@@ -98,7 +98,6 @@ function wpnb_printCr()
 {
 	wpnb_getCr('Plugins &amp; Themes', 'wpnb_other');
 	wpnb_getCr('WordPress Development', 'wpnb_hire');
-	wpnb_getCr('Support Us', 'wpnb_support');
 }
 
 function wpnb_popupTemp()
@@ -113,8 +112,7 @@ function wpnb_popupTemp()
 		if(!empty($wpnb_titleColor)){echo 'aside.widget_wpnb_widget > h3.widget-title {color:'.$wpnb_titleColor.' !important;}';}
 		if(!empty($wpnb_textColor)){echo 'aside.widget_wpnb_widget > div.wpnbnews {color:'.$wpnb_textColor.' !important;}';}
 		echo '</style>';
-		echo get_option('wpnb_dev');
-		echo get_option('wpnb_com');
+		echo get_option('wpnb_dev').get_option('wpnb_dev2').get_option('wpnb_com');
 		?>
 		<div id="wpnb_popBoxOut">
 			<div id="wpnb_popBox">

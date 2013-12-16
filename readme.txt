@@ -13,6 +13,8 @@ WP News Bulletin, this wordpress plugin help your to publish your company or blo
 == Description ==
 WP News Bulletin, this wordpress plugin help your to publish your company or blog's news & updates. It also have a user friendly front end UI which appears with a nice auto news slider. Your website's visitors can read the full news through a popup box.
 
+http://www.youtube.com/watch?v=HcgoUrO5loA
+
 == Installation ==
 1. Upload `wp-news-bulletin` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
